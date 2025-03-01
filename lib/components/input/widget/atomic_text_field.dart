@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import '../enum/input_type.dart';
 import '../regex/input_validators.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class AtomicTextField extends StatelessWidget {
   final TextInputType? textInputType;
   final int lengthLimit;
   final String? Function(String?)? onSaved;
@@ -39,7 +39,7 @@ class CustomTextFormField extends StatelessWidget {
   final InputValidatorType? validatorType;
   final String? errorMessage;
 
-  const CustomTextFormField({
+  const AtomicTextField({
     super.key,
     this.textInputType,
     this.lengthLimit = 100,
