@@ -79,9 +79,11 @@ class AtomicTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle themeTextStyle = Theme.of(context).textTheme.bodyMedium!;
+    Color primaryColor = Theme.of(context).colorScheme.primary;
+    Color secondaryColor = Theme.of(context).colorScheme.primary;
 
     return TextFormField(
-      style: themeTextStyle.copyWith(color: textColor),
+      style: themeTextStyle.copyWith(color: textColor ?? primaryColor),
       readOnly: readOnly ?? false,
       onTap: onTap,
       obscureText: obscure ?? false,
