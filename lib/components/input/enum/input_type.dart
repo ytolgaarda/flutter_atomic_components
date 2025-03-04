@@ -36,6 +36,10 @@ enum InputValidatorType {
   custom(
     regex: null,
     noMatchMessage: 'Geçersiz giriş.',
+  ),
+  noEmpty(
+    regex: r'^(?!\s*$).+',
+    noMatchMessage: 'Bu alan boş olamaz',
   );
 
   final String? regex;
