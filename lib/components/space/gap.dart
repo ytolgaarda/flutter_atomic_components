@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class Gap extends StatelessWidget {
+class Space extends StatelessWidget {
   final double size;
 
-  const Gap(this.size, {super.key});
+  const Space(this.size, {super.key});
 
   @override
   Widget build(BuildContext context) {
