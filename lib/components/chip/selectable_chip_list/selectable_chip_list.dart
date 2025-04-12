@@ -1,29 +1,31 @@
+// Bu widget, kullanıcıya istediği zaman tekli veya çoklu seçim yapma imkanı sağlar.
 import 'package:flutter/material.dart';
 
-// This widget allows that user can generate a choice chip list of T type.
 class SelectableChipList<T> extends StatefulWidget {
-  // List of model objects to work with.
+  // Model nesnelerinin listesi
   final List<T> items;
-  // A function that returns the property to be displayed on the chip from each model object
+  // Her bir model nesnesinden gösterilecek özelliği döndüren fonksiyon
   final String Function(T item) displayProperty;
-  // Search query used to filter the chip list.
+  // Arama sorgusu, chip listesini filtrelemek için kullanılır
   final String? searchQuery;
-  // Reverse function triggered when a chip is selected or deselected (for parent ui or widget)
-  final ValueChanged<T?> onSelected;
-  // Determines whether the selection checkmark will be displayed on the chip.
+  // Chip seçildiğinde tetiklenen fonksiyon (parent UI veya widget için)
+  final ValueChanged<Set<T>> onSelected;
+  // Chip'in seçili olup olmadığını gösterecek kontrol işareti
   final bool? showCheckmark;
-  // Avatar widget for selected chip
+  // Seçilen chip için avatar widget'ı
   final Widget? avatar;
-  // Avatar widget for unselected chip
+  // Seçilmeyen chip için avatar widget'ı
   final Widget? unSelectedAvatar;
-  // Chip's shape
+  // Chip şekli
   final OutlinedBorder? shape;
-  // Unselected chip color
+  // Seçilmeyen chip'in rengi
   final Color? unSelectedColor;
-  // Selected chip color
+  // Seçilen chip'in rengi
   final Color? selectedColor;
-  // Textstyle that determines style on chip.
+  // Chip'in yazı stili
   final TextStyle? textStyle;
+  // Çoklu seçim olup olmadığını belirten parametre
+  final bool isMultipleSelection;
 
   const SelectableChipList({
     super.key,
@@ -38,6 +40,7 @@ class SelectableChipList<T> extends StatefulWidget {
     this.unSelectedColor,
     this.selectedColor,
     this.textStyle,
+    this.isMultipleSelection = true, // Varsayılan olarak çoklu seçim
   });
 
   @override
@@ -45,10 +48,10 @@ class SelectableChipList<T> extends StatefulWidget {
 }
 
 class _SelectableChipListState<T> extends State<SelectableChipList<T>> {
-  // Selected item can be null
-  T? _selectedItem;
+  // Seçilen öğeleri tutan bir Set
+  Set<T> _selectedItems = {};
 
-  // Filters item list based on search query
+  // Arama sorgusuna göre öğe listesini filtreler
   List<T> _filterItems(List<T> items) {
     if (widget.searchQuery == null || widget.searchQuery!.isEmpty) {
       return items;
@@ -68,7 +71,7 @@ class _SelectableChipListState<T> extends State<SelectableChipList<T>> {
     return Wrap(
       spacing: 8.0,
       children: filteredItems.map((item) {
-        final isSelected = item == _selectedItem;
+        final isSelected = _selectedItems.contains(item);
         return ChoiceChip(
           color: WidgetStatePropertyAll<Color>(
               (isSelected ? widget.selectedColor : widget.unSelectedColor) ??
@@ -80,11 +83,24 @@ class _SelectableChipListState<T> extends State<SelectableChipList<T>> {
           selected: isSelected,
           onSelected: (selected) {
             setState(() {
-              // update selected item
-              _selectedItem = selected ? item : null;
+              if (widget.isMultipleSelection) {
+                // Çoklu seçim modunda, item'ı ekler ya da çıkarırız
+                if (selected) {
+                  _selectedItems.add(item);
+                } else {
+                  _selectedItems.remove(item);
+                }
+              } else {
+                // Tekli seçim modunda, sadece bir öğe seçilebilir
+                if (selected) {
+                  _selectedItems = {item};
+                } else {
+                  _selectedItems.clear();
+                }
+              }
             });
-            // return selected item to parent
-            widget.onSelected(_selectedItem);
+            // Seçilen öğeleri parent widget'a göndeririz
+            widget.onSelected(_selectedItems);
           },
         );
       }).toList(),
