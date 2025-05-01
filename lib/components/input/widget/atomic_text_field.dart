@@ -80,7 +80,7 @@ class AtomicTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     TextStyle themeTextStyle = Theme.of(context).textTheme.bodyMedium!;
     Color primaryColor = Theme.of(context).colorScheme.primary;
-    //  Color secondaryColor = Theme.of(context).colorScheme.primary;
+    Color secondaryColor = Theme.of(context).colorScheme.secondary;
 
     return TextFormField(
       style: themeTextStyle.copyWith(color: textColor ?? primaryColor),
@@ -148,7 +148,7 @@ class AtomicTextField extends StatelessWidget {
           ),
         ),
         filled: true,
-        fillColor: fillColor,
+        fillColor: fillColor ?? secondaryColor,
         prefixIcon: pIcon,
         suffixIcon: sIcon,
         hintText: hint,
